@@ -40,6 +40,10 @@ beforeAll(async () => {
     });
 });
 
+afterAll(async () => {
+    await dataSource.destroy();
+});
+
 describe("PropertyController", () => {
     beforeAll(async () => {
         const propertyRepo = dataSource.getRepository(PropertyEntity);
