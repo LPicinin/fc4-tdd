@@ -1,39 +1,95 @@
-## Sobre o projeto:
+# Projeto: Desenvolvimento Orientado a Testes (TDD)
 
-Este projeto é um exemplo simplificado de um sistema de reservas de propriedades, inspirado em plataformas como o Airbnb. O objetivo é criar uma aplicação que permita aos usuários:
+## 📌 Sobre o Desafio
+Este projeto faz parte do módulo de TDD do curso Full Cycle 4.0 e tem como objetivo implementar testes seguindo a metodologia de Desenvolvimento Orientado a Testes (TDD).
 
-- **Reservar propriedades para períodos específicos.**
-- **Cancelar reservas com base em políticas de reembolso.**
+O sistema é um gerenciador de reservas de propriedades e deve conter testes unitários e testes end-to-end para validar corretamente as funcionalidades.
 
-### Funcionalidades da Aplicação
+## 🚀 Como Rodar o Projeto
 
-1. **Realizar Reservas**
-    - Usuários podem reservar uma propriedade para um período específico, desde que:
-        - A propriedade esteja disponível para o período solicitado.
-        - O número de hóspedes não exceda a capacidade máxima da propriedade.
-    - O sistema calcula o preço total da reserva com base no preço por noite da propriedade e no número de noites reservadas.
-        - **Descontos automáticos:** Um desconto de 10% é aplicado para reservas de 7 ou mais noites.
-    - Após a confirmação da reserva, a propriedade fica indisponível para o período reservado.
-2. **Cancelar Reservas**
-    - Usuários podem cancelar suas reservas seguindo as políticas definidas:
-        - **Mais de 7 dias antes do check-in:** O sistema emite um reembolso total.
-        - **Entre 1 e 7 dias antes do check-in:** Um reembolso parcial de 50% do valor pago é emitido.
-        - **Menos de 1 dia antes do check-in:** Não há reembolso.
-    - Cancelamentos atualizam o status da reserva para "CANCELLED" e liberam a propriedade para novas reservas no mesmo período.
-    - O sistema impede o cancelamento de reservas que já foram canceladas, informando o usuário com uma mensagem de erro.
-3. **Verificar Disponibilidade**
-    - O sistema verifica se a propriedade está disponível no período solicitado antes de permitir a reserva.
-    - Após o cancelamento de uma reserva, a propriedade volta a ficar disponível para o período cancelado.
-4. **Validar o Número de Hóspedes**
-    - O sistema valida que o número de hóspedes:
-        - Seja maior que zero.
-        - Não exceda a capacidade máxima definida para a propriedade.
-    - Reservas que não atendem a esses critérios são rejeitadas, e o sistema informa o usuário com mensagens apropriadas.
+### 1️⃣ Pré-requisitos
+Antes de iniciar, certifique-se de ter instalado:
+- **Node.js** versão **20+**
+- **Gerenciador de pacotes npm** (instalado automaticamente com o Node.js)
+
+### 2️⃣ Clonando o repositório
+Utilize o repositório como base para o projeto na branch `main`:
+```sh
+git clone https://github.com/LPicinin/fc4-tdd.git
+cd fc4-tdd
+```
+
+### 3️⃣ Instalando dependências
+Após clonar o repositório, instale as dependências do projeto:
+```sh
+npm install
+```
+
+### 4️⃣ Executando os testes
+Para rodar todos os testes do projeto, utilize o comando:
+```sh
+npm run test
+```
 
 
----
+## 🧪 Testes Implementados
+### ✅ 1. Testes Unitários nos Mappers
 
-Fazer um reserva
-- user
-- property
-Cancelar
+#### **Arquivos de teste a criar:**
+
+- src/infrastructure/persistence/mappers/property_mapper.test.ts
+- src/infrastructure/persistence/mappers/booking_mapper.test.ts
+
+#### **Tarefas:**
+
+- Criar testes para validar as funções toDomain e toPersistence dos mappers de Property e Booking
+- Validar se os mappers convertem os objetos corretamente
+- Adicionar cenários onde os campos obrigatórios estão ausentes e validar se a exceção correta é lançada
+
+
+### ✅ 2. Testes E2E de Criação de Usuário (Guest)
+
+#### **Arquivo de teste a criar:**
+
+- src/infrastructure/web/user_controller_e2e.test.ts
+
+#### **Tarefas:**
+
+- Criar testes end-to-end para o endpoint POST /users
+- Implementar o método createUser em src/application/services/user_service.ts
+- Validar que o endpoint cria o usuário corretamente e retorna as mensagens de erro apropriadas com o código HTTP correto
+
+
+### ✅ 3. Testes E2E de Criação de Propriedade
+
+#### **Arquivo de teste a criar:**
+
+- src/infrastructure/web/property_controller_e2e.test.ts
+
+#### **Tarefas:**
+
+- Criar testes end-to-end para o endpoint POST /properties
+- Implementar o método createProperty em src/application/services/property_service.ts
+- Implementar a validação do atributo basePricePerNight, que obrigatoriamente deve ter um valor maior que 0 (src/domain/entities/property.ts)
+- Validar que o endpoint cria a propriedade corretamente e retorna as mensagens de erro apropriadas com o código HTTP correto
+
+### ✅ 4. Testes de Políticas de Reembolso (RefundRuleFactory)
+
+#### **Arquivo de teste a criar:**
+
+- src/domain/cancelation/refund_rule_factory.test.ts
+
+#### **Tarefas:**
+
+- Criar testes unitários para validar o comportamento da fábrica RefundRuleFactory
+- Validar os diferentes cenários de decisão baseados no número de dias até o check-in
+
+### ✅ 5. Testes de Cancelamento de Reserva
+
+#### **Arquivo de teste existente:**
+
+- src/application/services/booking_service.test.ts
+
+#### **Tarefas:**
+
+- Adicionar um teste para garantir que o sistema retorne um erro ao tentar cancelar uma reserva inexistente
